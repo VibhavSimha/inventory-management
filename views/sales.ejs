@@ -210,17 +210,20 @@
 
                                             <button type="submit" class="btn btn-success">Checkout</button>
                                         </form>
-                                        <% if (error) { %>
-                                            <script>
-                                                alert("<%= error %>");
-                                            </script>
-                                        <% } %>
                                         
                                         <% } else { %>
                                             <p>Your cart is empty.</p>
                                             <% } %>
                                 </div>
                             </div>
+                            <% if (error) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    <%= error %>
+                                </div>
+                                <script>
+                                    alert("<%= error %>");
+                                </script>
+                            <% } %>
                         </div>
                     </div>
 

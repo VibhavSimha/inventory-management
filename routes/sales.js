@@ -62,7 +62,20 @@ router.get('/', (req, res) => {
 
                 const cart = req.session.cart || [];
                 const sellers = req.session.sellers || [];
-                res.render('sales', { products, sales, cart, sellers, selfQuantity, error: null, user: req.session.user });
+                const error = req.session.error || null;
+                if (req.session.error) {
+                    delete req.session.error;
+                }
+
+                res.render('sales', {
+                    products,
+                    sales,
+                    cart,
+                    sellers,
+                    selfQuantity,
+                    error, 
+                    user: req.session.user
+                });
             });
         });
     });
@@ -159,18 +172,18 @@ router.post('/checkout', (req, res) => {
     }
 
     if (cart.length === 0) {
-        res.session.error = 'Cart is empty.'
+        req.session.error = 'Cart is empty.'
         return res.redirect('/sales');
     }
 
     if (!paymentMethod) {
-        res.session.error = 'Please select a payment method.'
+        req.session.error = 'Please select a payment method.'
         return res.redirect('/sales');
     }
 
     const validPaymentMethods = ['Cash', 'Card', 'Other'];
     if (!validPaymentMethods.includes(paymentMethod)) {
-        res.session.error = 'Invalid payment method.'
+        req.session.error = 'Invalid payment method.'
         return res.redirect('/sales');
     }
 
@@ -184,14 +197,16 @@ router.post('/checkout', (req, res) => {
         db.query(queryProduct, [item.product_id], (err, productData) => {
             if (err) {
                 console.error('Error checking product stock:', err);
-                res.session.error = 'Error checking stock'
+                req.session.error = 'Error checking stock'
                 return res.redirect('/sales');
             }
 
             if (!productData || productData[0].quantity < item.quantity) {
-                req.session.error = 'Insufficient stock for some items.'
+                req.session.error = 'Insufficient stock.'
+                console.log("Checkout insufficient stock");
+                req.session.cart = [];
                 return res.redirect('/sales');
-            }
+            }     
 
             totalSale += item.total_price;
             checkStockCompleted++;
