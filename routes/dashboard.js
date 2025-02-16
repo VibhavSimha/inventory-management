@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('../db');
 const router = express.Router();
-
+const ExcelJS = require('exceljs');
 console.log('hi');
 
 router.get('/', (req, res) => {
@@ -88,4 +88,49 @@ router.get('/', (req, res) => {
         });
     });
 });
+router.get('/download-report', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    const userId = req.session.user.id;
+
+    db.execute('SELECT id, total, date FROM sales WHERE user_id = ?', [userId], (err, sales) => {
+        if (err) {
+            console.error('Error fetching sales data:', err);
+            return res.status(500).send('Error fetching sales data');
+        }
+
+        if (!sales || sales.length === 0) {
+            return res.status(404).send('No sales data available to generate the report.');
+        }
+
+        const ExcelJS = require('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Sales Data');
+
+        worksheet.columns = [
+            { header: 'Sale ID', key: 'id', width: 15 },
+            { header: 'Total Amount', key: 'total', width: 20 },
+            { header: 'Date', key: 'date', width: 20 }
+        ];
+        worksheet.getRow(1).font = { bold: true };
+
+        sales.forEach((sale) => {
+            worksheet.addRow({ id: sale.id, total: sale.total, date: sale.date });
+        });
+
+        // Generate the file as a buffer
+        workbook.xlsx.writeBuffer().then((buffer) => {
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            res.setHeader('Content-Disposition', 'attachment; filename="sales.xlsx"');
+            res.send(Buffer.from(buffer));
+        }).catch((error) => {
+            console.error('Error generating Excel file:', error);
+            res.status(500).send('Error generating Excel file');
+        });
+    });
+});
+
+
 module.exports = router;
