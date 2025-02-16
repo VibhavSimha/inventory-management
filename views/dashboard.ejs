@@ -21,11 +21,11 @@
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="/user-management">
                         <i class="fas fa-users"></i> User Management
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <a href="/categories">
                         <i class="fas fa-th-list"></i> Categories
@@ -42,133 +42,134 @@
                     </a>
                 </li>
                 <li>
-                    <a target="_blank" href="http://192.168.0.104:8501">
+                    <a target="_blank" href="http://localhost:8501/">
                         <i class="fas fa-file-invoice"></i> Sales Report
                     </a>
                 </li>
             </ul>
         </nav>
 
-        <!-- Page Content -->
-        <div id="content">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
-                        <i class="fas fa-align-left"></i>
-                        <span>Toggle Sidebar</span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="nav navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Welcome, <%= user.username %></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/logout">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <!-- Dashboard Summary -->
+    <!-- Page Content -->
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <h2 class="mb-4">Dashboard</h2>
-                <div class="row">
-                    <!-- Total Sales -->
-                    <div class="col-md-3">
-                        <div class="card text-white bg-success mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Sales</h5>
-                                <p class="card-text">₹<%= parseFloat(totalSales).toFixed(2) %></p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Number of Sales -->
-                    <div class="col-md-3">
-                        <div class="card text-white bg-primary mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Number of Sales</h5>
-                                <p class="card-text"><%= numberOfSales %></p>
-                            </div>
-                        </div>
-                    </div>
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span>Toggle Sidebar</span>
+                </button>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Welcome, <%= user.username %></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
-                    <!-- Total Products Sold -->
-                    <div class="col-md-3">
-                        <div class="card text-white bg-warning mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Products Sold</h5>
-                                <p class="card-text"><%= totalProductsSold %></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Total Revenue -->
-                    <div class="col-md-3">
-                        <div class="card text-white bg-info mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Revenue</h5>
-                                <p class="card-text">₹<%= parseFloat(totalRevenue).toFixed(2) %></p>
-                            </div>
+        <!-- Dashboard Summary -->
+        <div class="container-fluid">
+            <h2 class="mb-4">Dashboard</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Sales</h5>
+                            <p class="card-text">₹<%= parseFloat(totalSales).toFixed(2) %></p>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Number of Sales</h5>
+                            <p class="card-text"><%= numberOfSales %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Products Sold</h5>
+                            <p class="card-text"><%= totalProductsSold %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Revenue</h5>
+                            <p class="card-text">₹<%= parseFloat(totalRevenue).toFixed(2) %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Products Nearing Expiry & Download Sales Report (Side by Side) -->
+            <div class="row mt-5">
                 <!-- Products Nearing Expiry -->
-<div class="mt-5">
-    <h4>Products Nearing Expiry</h4>
-    <div class="row">
-        <div class="col-md-6">
-            <% if (expiryProducts.length > 0) { %>
-                <table class="table table-sm table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Expiry Date</th>
-                            <th>Quantity</th>
-                            <th>Days to Expiry</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% expiryProducts.forEach(product => { %>
-                            <tr>
-                                <td><%= product.name %></td>
-                                <td><%= product.expiryDate.toISOString().slice(0, 10) %></td>
-                                <td><%= product.quantity %></td>
-                                <td>
-                                    <% if (product.daysToExpiry >= 0) { %>
-                                        <%= product.daysToExpiry %> days
-                                    <% } else { %>
-                                        Expired
-                                    <% } %>
-                                </td>
-                            </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-            <% } else { %>
-                <p class="text-muted">No products are nearing expiry within the next 7 days.</p>
-            <% } %>
+                <div class="col-md-6">
+                    <h4>Products Nearing Expiry</h4>
+                    <% if (expiryProducts.length > 0) { %>
+                        <table class="table table-sm table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Expiry Date</th>
+                                    <th>Quantity</th>
+                                    <th>Days to Expiry</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% expiryProducts.forEach(product => { %>
+                                    <tr>
+                                        <td><%= product.name %></td>
+                                        <td><%= product.expiryDate.toISOString().slice(0, 10) %></td>
+                                        <td><%= product.quantity %></td>
+                                        <td>
+                                            <% if (product.daysToExpiry >= 0) { %>
+                                                <%= product.daysToExpiry %> days
+                                            <% } else { %>
+                                                Expired
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <p class="text-muted">No products are nearing expiry within the next 7 days.</p>
+                    <% } %>
+                </div>
+
+                <!-- Download Sales Report (Right Side) -->
+                <div class="col-md-6">
+                    <h4>Download Sales Report</h4>
+                    <p>Click the button below to download the latest sales report.</p>
+                    <a href="/dashboard/download-report" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Download Report
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
-            </div>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
         });
-    </script>
+    });
+</script>
 </body>
 </html>

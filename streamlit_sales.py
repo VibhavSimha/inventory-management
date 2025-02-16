@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 
 @st.cache_resource
 def get_db_connection():
-    engine = create_engine(f"mysql+mysqlconnector://root:rootACC123@localhost/new_inventory")  # Modify credentials
+    engine = create_engine(f"mysql+mysqlconnector://root:raghav@localhost/inventory")  # Modify credentials
     return engine
 
 def fetch_sales_data():
@@ -32,7 +32,7 @@ data['date'] = pd.to_datetime(data['date'])
 
 if option == "Visualize Sales":
     st.header("Sales Data Overview")
-    st.write(data.head())
+    st.dataframe(data)
 
     # Total Sales Over Time
     st.subheader("Total Sales Over Time")
